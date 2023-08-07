@@ -26,4 +26,17 @@ public class AmazonRepository {
         return  jdbcTemplate.queryForObject(sql, new Object[]{productId},new ProductRowMapper());
     }
 
+    public Cart updateCart(Cart cart ){
+        //TODO : Insert query likhna hai
+        String sql = "UPDATE cart SET userid = ? , product_quantity = ? , productid = ? WHERE cartid = ? ";
+        int r=jdbcTemplate.update(
+                sql,
+                cart.getCartId(),
+                cart.getProductId(),
+                cart.getUserid(),
+                cart.getProductQuantity()
+        );
+        return cart;
+    }
+
 }

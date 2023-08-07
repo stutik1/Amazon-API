@@ -21,4 +21,15 @@ public class AmazonService {
     public Product getProductById(Long productId){
         return amazonRepository.findById(productId);
     }
+
+    public Cart updateCartItems(Cart updateCart){
+       Cart cart = amazonRepository.updateCart(updateCart);
+        if (cart != null){
+            cart.setCartId(updateCart.getCartId());
+            cart.setUserid(updateCart.getUserid());
+            cart.setProductId(updateCart.getProductId());
+            cart.setProductQuantity(updateCart.getProductQuantity());
+        }
+        return cart;
+    }
 }

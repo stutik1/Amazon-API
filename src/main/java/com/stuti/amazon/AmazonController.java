@@ -14,8 +14,8 @@ public class AmazonController {
     private final AmazonService amazonService;
 
     @Autowired
-    public AmazonController(AmazonService amazonService){
-        this.amazonService=amazonService;
+    public AmazonController(AmazonService amazonService) {
+        this.amazonService = amazonService;
     }
 
 //    @PostMapping("/order")
@@ -30,18 +30,41 @@ public class AmazonController {
 //    }
 
     @GetMapping("/product/all")
-    public ResponseEntity<Product> getAllProduct(){
+    public ResponseEntity<Product> getAllProduct() {
         List<Product> product = amazonService.getAllProduct();
-            return (ResponseEntity) ResponseEntity.ok(product);
+        return (ResponseEntity) ResponseEntity.ok(product);
     }
 
     @GetMapping("/product/{productId}")
-    public ResponseEntity<Product> getProductById(@PathVariable() Long productId ){
+    public ResponseEntity<Product> getProductById(@PathVariable() Long productId) {
         Product product = amazonService.getProductById(productId);
-        if (product != null){
+        if (product != null) {
             return ResponseEntity.ok(product);
-        }else {
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    //    @PutMapping("/cart")
+//    public ResponseEntity<Cart> cartitems(@PathVariable() Long userid){
+//        Cart cart = amazonService.cartitems(userid);
+//            if (cart != null){
+//                return ResponseEntity.ok(cart);
+//            }else {
+//                return ResponseEntity.notFound().build();
+//            }
+//        }
+
+
+    @PutMapping("/cart")
+    public ResponseEntity<Cart> updateCartItems( @RequestBody Cart updateCartItems) {
+        Cart cart = amazonService.updateCartItems(updateCartItems);
+        if (cart != null) {
+            return ResponseEntity.ok(cart);
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 }
+
+
