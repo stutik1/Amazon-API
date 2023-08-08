@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Site</title>
+    <style>
+        /* Your CSS styles here */
+    </style>
+</head>
+<body>
+    <h1>Welcome to Our E-Commerce Store</h1>
+
+    <!-- Product Details -->
+    <div class="product">
+        <!-- Dynamic product details will be added here -->
+    </div>
+
+    <!-- Cart -->
+    <div class="cart">
+        <h2>Your Cart</h2>
+        <ul id="cart-items">
+            <!-- Cart items will be added here dynamically -->
+        </ul>
+        <button onclick="placeOrder()">Place Order</button>
+    </div>
+
+    <!-- Order Tracking -->
+    <div class="order-tracking">
+        <h2>Order Tracking</h2>
+        <input type="text" id="order-number" placeholder="Enter Order Number">
+        <button onclick="trackOrder()">Track Order</button>
+        <p id="order-status"></p>
+    </div>
+
+    <script>
+        // Array to store cart items
+        let cartItems = [];
+
+        // Function to fetch and display products
+        function fetchProducts() {
+            try {
+                const response = fetch('/api/product/all');
+                const products = response.json();
+
+                // Clear existing product details
+                const productContainer = document.querySelector('.product');
+                productContainer.innerHTML = '';
+
+                // Loop through the products and dynamically display them
+                products.forEach(product => {
+                    const productItem = document.createElement('div');
+                    productItem.classList.add('product-item');
+
+                    const productName = document.createElement('h2');
+                    productName.textContent = product.productName;
+
+                    const productDescription = document.createElement('p');
+                    productDescription.textContent = product.productSpec;
+
+                    const productPrice = document.createElement('p');
+                    productPrice.textContent = `Price: $${product.price}`;
+
+                    const addToCartButton = document.createElement('button');
+                    addToCartButton.textContent = 'Add to Cart';
+                    addToCartButton.addEventListener('click', () => addToCart(product.name));
+
+                    productItem.appendChild(productName);
+                    productItem.appendChild(productDescription);
+                    productItem.appendChild(productPrice);
+                    productItem.appendChild(addToCartButton);
+
+                    productContainer.appendChild(productItem);
+                });
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        }
+
+        // Call the function to fetch and display products
+        fetchProducts();
+
+        // Function to add an item to the cart
+         function addToCart(productName) {
+            try {
+                const response =  fetch('api/ecom/cart/add', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ product: productName }),
+                });
+
+                if (response.ok) {
+                    cartItems.push(productName);
+                    updateCart();
+                } else {
+                    console.error('Failed to add item to cart');
+                }
+            } catch (error) {
+                console.error('Error adding item to cart:', error);
+            }
+        }
+
+        // Function to update the cart display
+        function updateCart() {
+            const cartList = document.getElementById("cart-items");
+            cartList.innerHTML = "";
+            cartItems.forEach(item => {
+                const li = document.createElement("li");
+                li.textContent = item;
+                cartList.appendChild(li);
+            });
+        }
+
+        // Function to place an order
+         function placeOrder() {
+            if (cartItems.length > 0) {
+                try {
+                    const response =  fetch('api/ecom/orders/place', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ items: cartItems }),
+                    });
+
+                    if (response.ok) {
+                        const orderNumber =  response.json();
+                        alert(`Order placed! Your order number is: ${orderNumber}`);
+                        cartItems = [];
+                        updateCart();
+                    } else {
+                        console.error('Failed to place order');
+                    }
+                } catch (error) {
+                    console.error('Error placing order:', error);
+                }
+            } else {
+                alert("Your cart is empty. Add items before placing an order.");
+            }
+        }
+
+        // Function to track an order
+         function trackOrder() {
+            const orderNumberInput = document.getElementById("order-number");
+            const orderNumber = parseInt(orderNumberInput.value);
+            const orderStatus = document.getElementById("order-status");
+
+            try {
+                const response =  fetch(`api/ecom/orders/track/${orderNumber}`);
+                const status =  response.text();
+
+                if (response.ok) {
+                    orderStatus.textContent = `Order ${orderNumber} status: ${status}`;
+                } else {
+                    orderStatus.textContent = `Error tracking order: ${status}`;
+                }
+            } catch (error) {
+                console.error('Error tracking order:', error);
+                orderStatus.textContent = 'Error tracking order';
+            }
+        }
+    </script>
+</body>
+</html>

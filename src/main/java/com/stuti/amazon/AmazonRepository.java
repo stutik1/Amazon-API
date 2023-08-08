@@ -21,15 +21,15 @@ public class AmazonRepository {
         });
     }
 
-    public Product findById(Long productId){
+    public Product findById(Long productId) {
         String sql = "SELECT * FROM product WHERE productid = ?";
-        return  jdbcTemplate.queryForObject(sql, new Object[]{productId},new ProductRowMapper());
+        return jdbcTemplate.queryForObject(sql, new Object[]{productId}, new ProductRowMapper());
     }
 
-    public Cart updateCart(Cart cart ){
+    public Cart updateCart(Cart cart) {
         //TODO : Insert query likhna hai
         String sql = "UPDATE cart SET userid = ? , product_quantity = ? , productid = ? WHERE cartid = ? ";
-        int r=jdbcTemplate.update(
+        int r = jdbcTemplate.update(
                 sql,
                 cart.getCartId(),
                 cart.getProductId(),
@@ -39,4 +39,13 @@ public class AmazonRepository {
         return cart;
     }
 
+    public Cart saveCart(Cart cart) {
+        String sql = "INSERT INTO cart (userid,product_quantity,productid) VALUES (?,?,?)";
+        jdbcTemplate.update(sql,
+                cart.getUserid(),
+                cart.getProductQuantity(),
+                cart.getProductId()
+        );
+        return cart;
+    }
 }

@@ -32,4 +32,8 @@ public class AmazonService {
         }
         return cart;
     }
+
+    public Cart saveCartDetails(Cart cart){
+        return amazonRepository.saveCart(cart);
+    }
 }

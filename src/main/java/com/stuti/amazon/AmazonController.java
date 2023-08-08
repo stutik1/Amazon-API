@@ -65,6 +65,12 @@ public class AmazonController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/cart")
+    public Cart createCart(@RequestBody Cart cart){
+        return amazonService.saveCartDetails(cart);
+    }
+
 }
 
 
