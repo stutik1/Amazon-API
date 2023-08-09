@@ -45,9 +45,9 @@ public class AmazonController {
         }
     }
 
-    //    @PutMapping("/cart")
-//    public ResponseEntity<Cart> cartitems(@PathVariable() Long userid){
-//        Cart cart = amazonService.cartitems(userid);
+//        @PutMapping("/cart/{userid}")
+//    public ResponseEntity<Cart> cartitems(@PathVariable Long userid,@RequestBody Cart updatedCart){
+//        Cart cart = amazonService.updateCartItems(userid,updatedCart);
 //            if (cart != null){
 //                return ResponseEntity.ok(cart);
 //            }else {
@@ -56,19 +56,30 @@ public class AmazonController {
 //        }
 
 
-    @PutMapping("/cart")
-    public ResponseEntity<Cart> updateCartItems( @RequestBody Cart updateCartItems) {
-        Cart cart = amazonService.updateCartItems(updateCartItems);
-        if (cart != null) {
-            return ResponseEntity.ok(cart);
-        } else {
+    @PostMapping("/cart")
+    public Cart createCart(@RequestBody Cart cart){
+        return amazonService.saveCartDetails(cart);
+    }
+
+    @PostMapping("/order")
+    public Order createOrder(@RequestBody Order order){
+        return amazonService.saveOrderDetail(order);
+    }
+
+    @GetMapping("/order/{orderId}")
+    public ResponseEntity<Order> getOrderById(@PathVariable() Long orderId){
+        Order order = amazonService.getOrderById(orderId);
+
+        if (order != null){
+            return ResponseEntity.ok(order);
+        }else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/cart")
-    public Cart createCart(@RequestBody Cart cart){
-        return amazonService.saveCartDetails(cart);
+    @GetMapping("/orderhistory/{userid}")
+    public List<Order> getOrderHistory(@PathVariable() Long userid) {
+        return (List<Order>) amazonService.getHistory(userid);
     }
 
 }

@@ -11,6 +11,21 @@ public class Order {
     private Long productId ;
     private OrderStatusType status;
 
+
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "orderId=" + orderId +
+                ", orderDate=" + orderDate +
+                ", orderAmount=" + orderAmount +
+                ", productQuantity=" + productQuantity +
+                ", userid=" + userid +
+                ", productId=" + productId +
+                ", status=" + status +
+                '}';
+    }
+
     public Order(Long orderId, Timestamp orderDate, Long orderAmount, int productQuantity, Long userid, Long productId, OrderStatusType status) {
         this.orderId = orderId;
         this.orderDate = orderDate;
