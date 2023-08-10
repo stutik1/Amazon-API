@@ -41,15 +41,16 @@ public class AmazonService {
         return amazonRepository.saveCart(cart);
     }
 
-    public Order saveOrderDetail(Order order){
+    public Order saveOrderDetail(Order order) {
         return amazonRepository.saveOrder(order);
     }
 
-    public Order getOrderById(Long orderId){
+    public Order getOrderById(Long orderId) {
         return amazonRepository.findOrderId(orderId);
     }
 
-    public Order getHistory(Long userid){
-        return (Order) amazonRepository.findHistory(userid);
+    public List<Order> getHistory(Long userid) {
+        return amazonRepository.findHistory(userid);
     }
+
 }

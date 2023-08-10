@@ -2,7 +2,6 @@ package com.stuti.amazon;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,12 +16,6 @@ public class AmazonController {
     public AmazonController(AmazonService amazonService) {
         this.amazonService = amazonService;
     }
-
-//    @PostMapping("/order")
-//    public ResponseEntity<String> createOrder(@RequestBody Order order){
-//
-//        return ;
-//    }
 
 //    @GetMapping("/product/all")
 //    public List<Product> getAllEmployee(){
@@ -55,33 +48,38 @@ public class AmazonController {
 //            }
 //        }
 
-
     @PostMapping("/cart")
-    public Cart createCart(@RequestBody Cart cart){
+    public Cart createCart(@RequestBody Cart cart) {
         return amazonService.saveCartDetails(cart);
     }
 
     @PostMapping("/order")
-    public Order createOrder(@RequestBody Order order){
+    public Order createOrder(@RequestBody Order order) {
         return amazonService.saveOrderDetail(order);
     }
 
     @GetMapping("/order/{orderId}")
-    public ResponseEntity<Order> getOrderById(@PathVariable() Long orderId){
+    public ResponseEntity<Order> getOrderById(@PathVariable() Long orderId) {
         Order order = amazonService.getOrderById(orderId);
 
-        if (order != null){
+        if (order != null) {
             return ResponseEntity.ok(order);
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/orderhistory/{userid}")
-    public List<Order> getOrderHistory(@PathVariable() Long userid) {
-        return (List<Order>) amazonService.getHistory(userid);
+    public ResponseEntity<List<Order>> getOrderHistory(@PathVariable Long userid) {
+        List<Order> order = (List<Order>) amazonService.getHistory(userid);
+        if (order != null) {
+            return ResponseEntity.ok(order);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
+
 
 

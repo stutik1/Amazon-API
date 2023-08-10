@@ -11,17 +11,17 @@ import java.util.List;
 @Repository
 public class AmazonRepository {
     private final JdbcTemplate jdbcTemplate;
-
+    private final OrderRowMapper orderRowMapper;
 
     @Autowired
-    public AmazonRepository(JdbcTemplate jdbcTemplate) {
+    public AmazonRepository(JdbcTemplate jdbcTemplate, OrderRowMapper orderRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.orderRowMapper = orderRowMapper;
     }
 
     public List<Product> findAllProduct() {
         String sql = "SELECT * FROM product ";
-        return jdbcTemplate.query(sql, new ProductRowMapper() {
-        });
+        return jdbcTemplate.query(sql, new ProductRowMapper());
     }
 
     public Product findById(Long productId) {
@@ -50,7 +50,7 @@ public class AmazonRepository {
         return cart;
     }
 
-    public  Order saveOrder(Order order){
+    public Order saveOrder(Order order) {
         order.setOrderDate(new Timestamp(System.currentTimeMillis()));
         String sql = "INSERT INTO order_details (status,order_amount,product_quantity,order_date,userid,productid) VALUES (?,?,?,?,?,?) RETURNING orderId";
         Long generatedOrderId = jdbcTemplate.queryForObject(
@@ -69,19 +69,19 @@ public class AmazonRepository {
         return order;
     }
 
-    public Order findOrderId(Long orderId){
+    public Order findOrderId(Long orderId) {
         String sql = "select * from order_details where orderid = ? ";
         return jdbcTemplate.queryForObject(sql, new Object[]{orderId}, new OrderRowMapper());
     }
 
 
-    public List<Order> findHistory(Long userid ){
-        String sql = "SELECT * FROM order_details WHERE userid = ? ORDER BY order_date DESC";
-//        String sql = "SELECT order_details.orderid, order_details.status, order_details.order_amount, order_details.product_quantity, order_details.order_date, order_details.userid ,order_details.productid" +
-//                "                 FROM order_details" +
-//                "                 JOIN userdetails ON order_details.userid = userdetails.userid" +
-//                "                 WHERE userdetails.userid = ? ORDER BY order_date DESC";
-        return (List<Order>) jdbcTemplate.queryForObject(sql,new Object[]{userid} , new OrderRowMapper());
+    public List<Order> findHistory(Long userid) {
+        //   String sql = "SELECT * FROM order_details WHERE userid = ? ORDER BY order_date DESC";
+        String sql = "SELECT order_details.orderid, order_details.status, order_details.order_amount, order_details.product_quantity, order_details.order_date, order_details.userid ,order_details.productid" +
+                "                 FROM order_details" +
+                "                 JOIN userdetails ON order_details.userid = userdetails.userid" +
+                "                 WHERE userdetails.userid = ? ORDER BY order_date DESC";
+        return jdbcTemplate.query(sql, orderRowMapper, userid);
 
     }
 }
