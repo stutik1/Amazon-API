@@ -1,0 +1,57 @@
+      body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #d0f0f8;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .product, .cart, .order-tracking {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+
+        .products {
+            display: flex;
+            justify-content: flex-start;
+            padding: 20px;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-content: center;
+        }
+        .product-item {
+            padding: 5px;
+        }
+
+        .product button, .cart button, .order-tracking button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .product button:hover, .cart button:hover, .order-tracking button:hover {
+            background-color: #0056b3;
+        }
+
+        .cart ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .order-tracking input[type="text"], .order-tracking button {
+            display: block;
+            margin: 10px auto;
+        }
+
+        #order-status {
+            font-weight: bold;
+        }
